@@ -1,3 +1,10 @@
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,8 +20,21 @@ public class Restful2 extends javax.swing.JFrame {
     /**
      * Creates new form Restful2
      */
+      private HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2).build();
     public Restful2() {
-        initComponents();
+               initComponents();
+               try {
+
+            final HttpRequest requestPosts = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create("https://restcountries.eu/rest/v2/name/mexico/"))
+                    .build();
+            final HttpResponse<String> response = httpClient.send(requestPosts, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(Restful2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
